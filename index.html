@@ -78,15 +78,20 @@
   }
 
   .form-card {
-    width: 100%; max-width: 330px; background: rgba(255,255,255,.78);
-    border-radius: 22px; padding: 24px 20px; backdrop-filter: blur(4px);
-    box-shadow: 0 10px 30px rgba(185,80,120,.2);
-  }
+  width: 100%; max-width: 330px; box-sizing: border-box;
+  background: rgba(255,255,255,.78);
+  border-radius: 22px; padding: 24px 20px;
+  backdrop-filter: blur(4px); overflow: hidden;
+  box-shadow: 0 10px 30px rgba(185,80,120,.2);
+}
   .form-card label { display: block; text-align: left; font-size: 13px; color: #b04973; font-weight: 600; margin: 12px 0 5px; }
   .form-card input {
-    width: 100%; padding: 12px 14px; border: 1.5px solid #f0b8cc; border-radius: 12px;
-    font-size: 15px; color: #6d2a46; background: #fff; outline: none;
-  }
+  width: 100%; box-sizing: border-box; min-width: 0; max-width: 100%;
+  padding: 12px 14px; border: 1.5px solid #f0b8cc; border-radius: 12px;
+  font-size: 16px; color: #6d2a46; background: #fff; outline: none;
+  -webkit-appearance: none; appearance: none;
+}
+.form-card input:focus { border-color: #ff5f8f; }
   .form-card input:focus { border-color: #ff5f8f; }
   .send {
     width: 100%; margin-top: 18px; padding: 14px; border: none; cursor: pointer;

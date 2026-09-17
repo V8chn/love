@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Особое приглашение 💌</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overscroll-behavior: none;
+  }
+  .phone {
+    width: 100%; height: 100vh; height: 100dvh;
+    position: relative; overflow: hidden;
+    background: radial-gradient(120% 120% at 50% 20%, #fff0f5 0%, #ffd9e6 45%, #ffc1d4 100%);
+  }
+  .screen {
+    position: absolute; inset: 0;
+    padding: 28px 24px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    transform: translateY(0);
+    transition: transform .7s cubic-bezier(.4,.9,.2,1), opacity .7s;
+    will-change: transform;
+    pointer-events: none; opacity: 0;
+  }
+  .screen.current { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+  h1 { font-size: 30px; margin: 14px 0 8px; color: #a63d66; letter-spacing: .3px; font-weight: 700; }
+  h2 { font-size: 22px; margin: 10px 0 6px; color: #b04973; font-weight: 600; }
+  .sub { font-size: 15px; color: #c96a90; margin-bottom: 18px; max-width: 92%; line-height: 1.5; }
+
+  .photo-frame {
+    width: 200px; height: 200px;
+    margin: 12px auto 6px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 24px rgba(185,80,120,.25);
+    border: 2px solid rgba(255,255,255,.7);
+  }
+  .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-frame.wide { width: 300px; height: 190px; }
+
+  .btn-yes {
+    margin-top: 14px; padding: 14px 46px; border: none; cursor: pointer;
+    border-radius: 40px; background: #ff5f8f; color: #fff;
+    font-size: 17px; font-weight: 600; letter-spacing: .4px;
+    box-shadow: 0 8px 18px rgba(255,95,143,.4);
+    transition: transform .15s;
+  }
+  .btn-yes:active { transform: scale(.94); }
+
+  .btn-more {
+    margin-top: 18px; padding: 14px 44px; border: 2px solid #ff5f8f;
+    border-radius: 40px; background: #fff; color: #ff5f8f;
+    font-size: 16px; font-weight: 600; cursor: pointer;
+    transition: transform .15s, background .2s;
+  }
+  .btn-more:active { transform: scale(.94); background: #fff0f5; }
+
+  .btn-no {
+    position: absolute; padding: 14px 42px;
+    border: 2px solid #e8a9bf; border-radius: 40px;
+    background: #fff; color: #c96a90;
+    font-size: 16px; font-weight: 600; cursor: pointer;
+    z-index: 5; white-space: nowrap;
+    left: 0; top: 0;
+    transition: left .3s, top .3s;
+  }
+
+  .yes-ret {
+    margin-top: 14px; padding: 15px 40px; border: none; cursor: pointer;
+    border-radius: 40px; background: #ff5f8f; color: #fff;
+    font-size: 17px; font-weight: 600; box-shadow: 0 8px 18px rgba(255,95,143,.4);
+  }
+
+  .form-card {
+    width: 100%; max-width: 330px; background: rgba(255,255,255,.78);
+    border-radius: 22px; padding: 24px 20px; backdrop-filter: blur(4px);
+    box-shadow: 0 10px 30px rgba(185,80,120,.2);
+  }
+  .form-card label { display: block; text-align: left; font-size: 13px; color: #b04973; font-weight: 600; margin: 12px 0 5px; }
+  .form-card input {
+    width: 100%; padding: 12px 14px; border: 1.5px solid #f0b8cc; border-radius: 12px;
+    font-size: 15px; color: #6d2a46; background: #fff; outline: none;
+  }
+  .form-card input:focus { border-color: #ff5f8f; }
+  .send {
+    width: 100%; margin-top: 18px; padding: 14px; border: none; cursor: pointer;
+    border-radius: 40px; background: #ff5f8f; color: #fff; font-size: 17px; font-weight: 600;
+  }
+
+  .tap-zone { position: absolute; inset: 0; cursor: pointer; z-index: 3; }
+  .hint { margin-top: 26px; font-size: 13px; color: #c96a90; animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+  .confetti-wrap { position: absolute; inset: 0; pointer-events: none; overflow: hidden; display: none; z-index: 20; }
+  .confetti-wrap.show { display: block; }
+  .conf { position: absolute; top: -20px; border-radius: 2px; animation: fall linear forwards; opacity: .95; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+  .final-card { max-width: 340px; text-align: center; }
+  .final-card .big { font-size: 40px; margin-bottom: 8px; }
+  .final-card p { font-size: 15px; color: #a63d66; line-height: 1.55; margin: 10px 0; font-weight: 500; }
+  .final-card .wink { margin-top: 16px; color: #c96a90; font-size: 14px; font-style: italic; }
+
+  .ride-card { max-width: 340px; text-align: center; }
+  .ride-card .ship { font-size: 34px; margin-bottom: 8px; }
+  .ride-card p { font-size: 16px; color: #a63d66; line-height: 1.55; margin: 10px 0; font-weight: 600; }
+  .ride-card .num { color: #ff5f8f; font-size: 18px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="confetti-wrap" id="confetti"></div>
+
+  <section class="screen current" id="s1">
+    <div class="tap-zone" id="tap1"></div>
+    <div style="font-size:120px; line-height:1; opacity:.2; margin-bottom:6px;">💌</div>
+    <h1>Особое приглашение!</h1>
+    <div class="hint">нажми на экран ➜</div>
+  </section>
+
+  <section class="screen" id="s2">
+    <h2 style="margin-bottom:14px;">Хочешь получить всё<br>на блюдечке с золотой каёмочкой?</h2>
+    <div class="photo-frame"><img src="photo1.png" alt="тарелка"></div>
+    <button class="btn-yes" onclick="next()">Да</button>
+  </section>
+
+  <section class="screen" id="s3">
+    <h2 style="margin-bottom:10px;">Хочешь жить припеваючи —<br>как кот в сметане?</h2>
+    <div class="photo-frame"><img src="photo2.png" alt="кот в сметане"></div>
+    <button class="btn-yes" onclick="next()">Да</button>
+  </section>
+
+  <section class="screen" id="s4">
+    <h2 style="margin-bottom:10px;">Хочешь шляться, красиво проводить<br>время и тратить деньги?</h2>
+    <div class="photo-frame"><img src="photo3.png" alt="кот-миллионер"></div>
+    <button class="btn-yes" onclick="next()">Да</button>
+  </section>
+
+  <section class="screen" id="s5">
+    <div style="font-size:80px; line-height:1; opacity:.2; margin-bottom:10px;">💞</div>
+    <h1 style="font-size:26px;">Тогда, готова ли ты<br>пойти со мной на свидание?</h1>
+    <button class="yes-ret" onclick="goForm()">Да, конечно</button>
+    <button class="btn-no" id="noBtn" onclick="flee()">Нет</button>
+  </section>
+
+  <section class="screen" id="s6">
+    <h2 style="margin-bottom:6px;">Отлично! 💖</h2>
+    <div class="sub" style="margin-bottom:16px;">Расскажи, куда и когда — я всё подготовлю</div>
+    <div class="form-card">
+      <label>Дата</label>
+      <input id="date" type="date">
+      <label>Время</label>
+      <input id="time" type="time">
+      <label>Место свидания (ресторан, кафе)</label>
+      <input id="place" type="text" placeholder="название заведения">
+      <button class="send" onclick="submit()">Отправить 💌</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s7">
+    <div class="final-card">
+      <div class="big">УРААА! ❤️</div>
+      <p>Кажется, у нас свидание!</p>
+      <p>Я уже получил твой ответ и теперь официально<br>считаю, что у меня есть планы на ближайшее время 😌</p>
+      <p>Приглашение принято. 🥂</p>
+      <p>Тебе больше ничего делать не нужно — я всё получил<br>и скоро напишу тебе 😉</p>
+      <div class="wink">А теперь можешь улыбнуться. Я старался.</div>
+      <button class="btn-more" onclick="show(8)">И ещё …</button>
+    </div>
+  </section>
+
+  <section class="screen" id="s8">
+    <div class="ride-card">
+      <div class="ship">🚗✨</div>
+      <p>За тобой приедет вот этот космолет, номер<br><span class="num">Т 581 ЕХ 58 🇷🇺</span></p>
+      <div class="photo-frame wide"><img src="photo4.jpg" alt="машина"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  let current = 1;
+  const total = 8;
+
+  // Telegram-креды
+  const TG_TOKEN = '8833527936:AAHqQ59W6bpZO8Todn8dzzo-6mE8I8yGjKw';
+  const TG_CHAT_ID = '1467133404';
+
+  function show(n) {
+    if (n < 1 || n > total) return;
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('current'));
+    document.getElementById('s' + n).classList.add('current');
+    current = n;
+    if (n === 5) placeNoUnderYes();
+  }
+  function next() { show(current + 1); }
+
+  function placeNoUnderYes() {
+    const btn = document.getElementById('noBtn');
+    const yesBtn = document.querySelector('#s5 .yes-ret');
+    if (!btn || !yesBtn) return;
+    const yr = yesBtn.getBoundingClientRect();
+    const br = btn.getBoundingClientRect();
+    btn.style.left = (yr.left + yr.width / 2 - br.width / 2) + 'px';
+    btn.style.top = (yr.bottom + 18) + 'px';
+    btn.style.transform = 'translate(0,0)';
+  }
+
+  document.getElementById('tap1').addEventListener('click', () => next());
+
+  function flee() {
+    const phone = document.getElementById('phone');
+    const btn = document.getElementById('noBtn');
+    const bw = btn.offsetWidth, bh = btn.offsetHeight;
+    const wr = phone.clientWidth, hr = phone.clientHeight;
+    let x, y, guard = 0;
+    do {
+      x = 24 + Math.random() * (wr - bw - 48);
+      y = 80 + Math.random() * (hr - bh - 160);
+      guard++;
+    } while (guard < 40 && Math.hypot(x - wr/2, y - hr/2) < 120);
+    btn.style.left = x + 'px';
+    btn.style.top = y + 'px';
+    btn.style.transform = 'translate(0,0)';
+  }
+
+  function goForm() {
+    document.getElementById('noBtn').style.display = 'none';
+    show(6);
+  }
+
+  function submit() {
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const place = document.getElementById('place').value.trim();
+    if (!date || !time || !place) { alert('Заполни дату, время и место 😊'); return; }
+
+    // Отправка в Telegram
+    const msg = '💌 Новое свидание!\n' +
+                'Дата: ' + date + '\n' +
+                'Время: ' + time + '\n' +
+                'Место: ' + place;
+
+    fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg })
+    }).catch(function(e) {
+      console.log('Ошибка отправки в Telegram:', e);
+    });
+
+    show(7);
+    burst(120);
+  }
+
+  const colors = ['#ff5f8f','#ffd166','#06d6a0','#f78fb3','#7b9cff','#ff9f43','#b39ddb'];
+  function burst(n) {
+    const wrap = document.getElementById('confetti');
+    wrap.classList.add('show');
+    for (let i = 0; i < n; i++) {
+      const c = document.createElement('div');
+      c.className = 'conf';
+      const size = 6 + Math.random() * 8;
+      c.style.width = size + 'px';
+      c.style.height = size + 'px';
+      c.style.left = Math.random() * 100 + '%';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDuration = (2.2 + Math.random() * 2) + 's';
+      c.style.animationDelay = (Math.random() * 1.2) + 's';
+      wrap.appendChild(c);
+      setTimeout(() => c.remove(), 5000);
+    }
+  }
+</script>
+</body>
+</html>
